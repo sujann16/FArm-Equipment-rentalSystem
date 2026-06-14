@@ -59,6 +59,14 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', service: 'AgriShare AI API' });
 });
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'AgroHire API is running 🚜',
+    health: '/health'
+  });
+});
+
 // Global Error Handler Middleware
 app.use(errorHandler);
 
