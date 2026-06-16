@@ -1,7 +1,10 @@
 import axios from 'axios';
 
+const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+const baseURL = apiBase.endsWith('/api') ? apiBase : `${apiBase}/api`;
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5001/api',
+  baseURL,
   withCredentials: true, // Crucial for HTTP-only cookies
   headers: {
     'Content-Type': 'application/json'
@@ -19,15 +22,12 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       try {
         // Attempt to call refresh token endpoint
-await axios.post(
-
-  `${import.meta.env.VITE_API_URL}/api/auth/refresh-token`,
-
-  {},
-
-  { withCredentials: true }
-
-);        // Retry original request
+        await axios.post(
+          `${baseURL}/auth/refresh-token`,
+          {},
+          { withCredentials: true }
+        );
+        // Retry original request
         return api(originalRequest);
       } catch (refreshError) {
         console.warn('Session expired. Redirecting to login.');
