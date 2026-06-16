@@ -19,8 +19,15 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       try {
         // Attempt to call refresh token endpoint
-        await axios.post('http://localhost:5001/api/auth/refresh-token', {}, { withCredentials: true });
-        // Retry original request
+await axios.post(
+
+  `${import.meta.env.VITE_API_URL}/api/auth/refresh-token`,
+
+  {},
+
+  { withCredentials: true }
+
+);        // Retry original request
         return api(originalRequest);
       } catch (refreshError) {
         console.warn('Session expired. Redirecting to login.');
