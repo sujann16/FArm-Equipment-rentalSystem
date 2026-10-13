@@ -21,6 +21,7 @@ dotenv_1.default.config();
 // Connect to database
 (0, db_1.connectDB)();
 const app = (0, express_1.default)();
+app.set('trust proxy', 1);
 // Security Headers
 app.use((0, helmet_1.default)());
 // CORS configuration (allow requests from frontend Vite dev server)
