@@ -32,14 +32,33 @@ const SearchPage = () => {
   const fetchListings = async () => {
     setLoading(true);
     try {
+      // Read directly from searchParams so we always get fresh values
+      // even when the URL changes externally (e.g. coming from Home search)
       const params = {};
-      if (category) params.category = category;
-      if (pincode) params.pincode = pincode;
-      if (searchQuery) params.search = searchQuery;
-      if (minPrice) params.minPrice = minPrice;
-      if (maxPrice) params.maxPrice = maxPrice;
-      if (startDate) params.startDate = startDate;
-      if (endDate) params.endDate = endDate;
+      const _category  = searchParams.get('category')  || '';
+      const _pincode   = searchParams.get('pincode')   || '';
+      const _search    = searchParams.get('search')    || '';
+      const _minPrice  = searchParams.get('minPrice')  || '';
+      const _maxPrice  = searchParams.get('maxPrice')  || '';
+      const _startDate = searchParams.get('startDate') || '';
+      const _endDate   = searchParams.get('endDate')   || '';
+
+      if (_category)  params.category  = _category;
+      if (_pincode)   params.pincode   = _pincode;
+      if (_search)    params.search    = _search;
+      if (_minPrice)  params.minPrice  = _minPrice;
+      if (_maxPrice)  params.maxPrice  = _maxPrice;
+      if (_startDate) params.startDate = _startDate;
+      if (_endDate)   params.endDate   = _endDate;
+
+      // Also sync local filter UI state so inputs stay in sync with URL
+      setSearchQuery(_search);
+      setPincode(_pincode);
+      setCategory(_category);
+      setMinPrice(_minPrice);
+      setMaxPrice(_maxPrice);
+      setStartDate(_startDate);
+      setEndDate(_endDate);
 
       const res = await api.get('/equipment', { params });
       if (res.data?.success) {

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgriShare AI — Architecture Diagram</title>
+<style>
+  :root{color-scheme:light}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    background:#f1f5f9;color:#0f172a;padding:32px 16px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;background:#fff;border:1px solid #e2e8f0;
+    border-radius:18px;padding:28px 24px 20px;box-shadow:0 4px 24px rgba(15,23,42,.06)}
+  .head{text-align:center;margin-bottom:8px}
+  .badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:#16a34a;background:#f0fdf4;border:1px solid #bbf7d0;
+    padding:4px 12px;border-radius:999px;margin-bottom:10px}
+  h1{font-size:26px;font-weight:800;letter-spacing:-.02em}
+  h1 span{color:#16a34a}
+  .head p{color:#64748b;font-size:14px;margin-top:5px}
+  svg{width:100%;height:auto;display:block;margin-top:6px}
+  .t-title{font:700 15px 'Inter',sans-serif;fill:#0f172a}
+  .t-sub{font:500 11.5px 'Inter',sans-serif;fill:#64748b}
+  .t-hdr{font:800 13px 'Inter',sans-serif;letter-spacing:.06em}
+  .t-edge{font:600 12.5px ui-monospace,Menlo,monospace;fill:#1e293b}
+  .t-edge2{font:500 11px 'Inter',sans-serif;fill:#64748b}
+  .t-num{font:800 12px 'Inter',sans-serif;fill:#fff}
+  .t-chip{font:600 13.5px 'Inter',sans-serif;fill:#0f172a}
+  .fb{font:600 11px 'Inter',sans-serif;fill:#16a34a}
+  .t-leg{font:600 12px 'Inter',sans-serif;fill:#334155}
+  .t-cap{font:500 11.5px 'Inter',sans-serif;fill:#94a3b8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div class="badge">System Architecture</div>
+    <h1><span>AgriShare</span> AI — End-to-End Architecture</h1>
+    <p>Login → credential check at the database → tokens back → every feature reuses the same guarded path.</p>
+  </div>
+
+  <svg viewBox="0 0 980 912" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+    <defs>
+      <marker id="ahb" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+        <path d="M0,0 L7,3 L0,6 Z" fill="#2563eb"/></marker>
+      <marker id="ahg" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+        <path d="M0,0 L7,3 L0,6 Z" fill="#16a34a"/></marker>
+      <marker id="ahd" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+        <path d="M0,0 L7,3 L0,6 Z" fill="#94a3b8"/></marker>
+    </defs>
+
+    <!-- ===== USERS ===== -->
+    <text x="300" y="16" text-anchor="middle" class="t-hdr" fill="#16a34a">USERS</text>
+    <g>
+      <rect x="150" y="26" width="92" height="40" rx="9" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+      <text x="196" y="51" text-anchor="middle" class="t-chip">Farmer</text>
+      <rect x="254" y="26" width="92" height="40" rx="9" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+      <text x="300" y="51" text-anchor="middle" class="t-chip">Owner</text>
+      <rect x="358" y="26" width="92" height="40" rx="9" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+      <text x="404" y="51" text-anchor="middle" class="t-chip">Admin</text>
+    </g>
+    <line x1="300" y1="66" x2="300" y2="115" stroke="#16a34a" stroke-width="2" marker-end="url(#ahg)"/>
+
+    <!-- ===== REACT SPA ===== -->
+    <rect x="150" y="119" width="300" height="70" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+    <text x="300" y="150" text-anchor="middle" class="t-title">React SPA · Browser</text>
+    <text x="300" y="170" text-anchor="middle" class="t-sub">single-page app · axios · role-based views</text>
+
+    <!-- ===== SPA <-> SERVER edges ===== -->
+    <line x1="250" y1="189" x2="250" y2="297" stroke="#2563eb" stroke-width="2" marker-end="url(#ahb)"/>
+    <line x1="350" y1="297" x2="350" y2="191" stroke="#16a34a" stroke-width="2" marker-end="url(#ahg)"/>
+    <!-- badge 1 -->
+    <circle cx="250" cy="203" r="11" fill="#2563eb"/><text x="250" y="207" text-anchor="middle" class="t-num">1</text>
+    <rect x="20" y="214" width="216" height="54" rx="8" fill="#fff" stroke="#e2e8f0"/>
+    <text x="30" y="235" class="t-edge">POST /api/auth/login</text>
+    <text x="30" y="254" class="t-edge2">browser attaches httpOnly cookie</text>
+    <!-- badge 4 -->
+    <circle cx="350" cy="203" r="11" fill="#16a34a"/><text x="350" y="207" text-anchor="middle" class="t-num">4</text>
+    <rect x="366" y="214" width="268" height="54" rx="8" fill="#fff" stroke="#e2e8f0"/>
+    <text x="376" y="235" class="t-edge" font-size="11.5">Set-Cookie: access(15m) + refresh(7d)</text>
+    <text x="376" y="254" class="t-edge2">returns user profile → AuthContext</text>
+
+    <!-- ===== EXPRESS SERVER CONTAINER ===== -->
+    <rect x="110" y="297" width="380" height="252" rx="14" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <text x="300" y="322" text-anchor="middle" class="t-hdr" fill="#2563eb">EXPRESS API SERVER</text>
+    <text x="300" y="340" text-anchor="middle" class="t-sub">Node.js · Express 4</text>
+
+    <rect x="140" y="352" width="320" height="50" rx="10" fill="#fff" stroke="#bfdbfe" stroke-width="1.5"/>
+    <text x="300" y="372" text-anchor="middle" class="t-title" font-size="14">Security gate</text>
+    <text x="300" y="390" text-anchor="middle" class="t-sub">helmet · CORS · rate-limit · validation</text>
+    <line x1="300" y1="402" x2="300" y2="411" stroke="#2563eb" stroke-width="2" marker-end="url(#ahb)"/>
+
+    <rect x="140" y="413" width="320" height="50" rx="10" fill="#fff" stroke="#bfdbfe" stroke-width="1.5"/>
+    <text x="300" y="433" text-anchor="middle" class="t-title" font-size="14">Auth check</text>
+    <text x="300" y="451" text-anchor="middle" class="t-sub">verify JWT · authorize role</text>
+    <line x1="300" y1="463" x2="300" y2="472" stroke="#2563eb" stroke-width="2" marker-end="url(#ahb)"/>
+
+    <rect x="140" y="474" width="320" height="50" rx="10" fill="#fff" stroke="#bfdbfe" stroke-width="1.5"/>
+    <text x="300" y="494" text-anchor="middle" class="t-title" font-size="14">Controllers</text>
+    <text x="300" y="512" text-anchor="middle" class="t-sub">auth · equipment · booking · ai</text>
+
+    <!-- ===== SERVER <-> DB edges ===== -->
+    <line x1="250" y1="549" x2="250" y2="681" stroke="#2563eb" stroke-width="2" marker-end="url(#ahb)"/>
+    <line x1="350" y1="681" x2="350" y2="551" stroke="#16a34a" stroke-width="2" marker-end="url(#ahg)"/>
+    <!-- badge 2 -->
+    <circle cx="250" cy="565" r="11" fill="#2563eb"/><text x="250" y="569" text-anchor="middle" class="t-num">2</text>
+    <rect x="20" y="576" width="216" height="54" rx="8" fill="#fff" stroke="#e2e8f0"/>
+    <text x="30" y="597" class="t-edge">find user by email</text>
+    <text x="30" y="616" class="t-edge2">read the stored password hash</text>
+    <!-- badge 3 -->
+    <circle cx="350" cy="565" r="11" fill="#16a34a"/><text x="350" y="569" text-anchor="middle" class="t-num">3</text>
+    <rect x="366" y="576" width="268" height="54" rx="8" fill="#fff" stroke="#e2e8f0"/>
+    <text x="376" y="597" class="t-edge" font-size="11.5">bcrypt.compare(input, hash)</text>
+    <text x="376" y="616" class="t-edge2">match → mint JWT tokens</text>
+
+    <!-- ===== MONGODB CYLINDER ===== -->
+    <g>
+      <path d="M150,690 L150,782 A150,18 0 0 0 450,782 L450,690" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+      <ellipse cx="300" cy="690" rx="150" ry="18" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+      <text x="300" y="712" text-anchor="middle" class="t-title" fill="#b45309">MongoDB</text>
+      <text x="300" y="732" text-anchor="middle" class="t-sub">users · equipments · bookings</text>
+      <text x="300" y="748" text-anchor="middle" class="t-sub">reviews · notifications · disputes</text>
+    </g>
+
+    <!-- ===== EXTERNAL SERVICES ===== -->
+    <text x="790" y="322" text-anchor="middle" class="t-hdr" fill="#64748b">EXTERNAL · OPTIONAL</text>
+
+    <line x1="490" y1="384" x2="636" y2="384" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ahd)"/>
+    <line x1="490" y1="462" x2="636" y2="462" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ahd)"/>
+    <line x1="490" y1="540" x2="636" y2="540" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ahd)"/>
+    <text x="512" y="349" class="t-cap">only when a key is set</text>
+
+    <rect x="640" y="356" width="300" height="60" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="656" y="378" class="t-title" font-size="14">Google Gemini</text>
+    <text x="656" y="396" class="t-sub">AI equipment advice</text>
+    <text x="926" y="396" text-anchor="end" class="fb">↳ fallback: rule engine</text>
+
+    <rect x="640" y="434" width="300" height="60" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="656" y="456" class="t-title" font-size="14">OpenWeather</text>
+    <text x="656" y="474" class="t-sub">5-day forecast</text>
+    <text x="926" y="474" text-anchor="end" class="fb">↳ fallback: simulator</text>
+
+    <rect x="640" y="512" width="300" height="60" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="656" y="534" class="t-title" font-size="14">Twilio WhatsApp</text>
+    <text x="656" y="552" class="t-sub">farmer alerts</text>
+    <text x="926" y="552" text-anchor="end" class="fb">↳ fallback: log file</text>
+
+    <!-- ===== LEGEND ===== -->
+    <line x1="40" y1="838" x2="940" y2="838" stroke="#e2e8f0" stroke-width="1"/>
+    <rect x="150" y="856" width="26" height="6" rx="3" fill="#2563eb"/>
+    <text x="184" y="866" class="t-leg">request</text>
+    <rect x="270" y="856" width="26" height="6" rx="3" fill="#16a34a"/>
+    <text x="304" y="866" class="t-leg">response / data</text>
+    <line x1="440" y1="859" x2="466" y2="859" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5 4"/>
+    <text x="474" y="866" class="t-leg">optional external call (with fallback)</text>
+
+    <text x="490" y="895" text-anchor="middle" class="t-cap">The numbered path 1→4 is a login. Every protected feature (book, list, review) reuses steps 1–3: verify token → check role → controller → DB.</text>
+  </svg>
+</div>
+</body>
+</html>
